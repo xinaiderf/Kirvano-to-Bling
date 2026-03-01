@@ -7,7 +7,6 @@ import os
 
 app = FastAPI()
 
-# --- SEUS BASE MODELS ---
 class Address(BaseModel):
     street: str
     number: str
@@ -34,7 +33,6 @@ class KirvanoWebhook(BaseModel):
     created_at: str
     customer: Customer
     products: List[Product]
-# ------------------------
 
 skus = {
     "PDRN-1": "SKU1",
@@ -47,61 +45,66 @@ skus = {
     "GHK-CU-12": "SKU8"
 }
 
+# 3. Rotas da API
 @app.post("/newOrder")
 async def newOrder(data: KirvanoWebhook):
+    customer = data.customer
+    address = customer.address
 
-  customer = data.customer
-  address = customer.address
+    enderecoCliente = {
+        "logradouro": address.street if address else "",
+        "numero": address.number if address else "",
+        "complemento": address.complement if address else "",
+        "bairro": address.neighborhood if address else "",
+        "municipio": address.city if address else "",
+        "uf": address.state if address else "",
+        "cep": address.zipcode if address else ""
+    }
 
-  enderecoCliente = {
-    "logradouro": address.street if address else "",
-    "numero": address.number if address else "",
-    "complemento": address.complement if address else "",
-    "bairro": address.neighborhood if address else "",
-    "municipio": address.city if address else "",
-    "uf": address.state if address else "",
-    "cep": address.zipcode if address else ""
-  }
+    dadosCliente = {
+        "nomeCliente": customer.name,
+        "cpfCliente": customer.document,
+        "emailCliente": customer.email,
+        "telefoneCliente": customer.phone_number
+    }
 
-  dadosCliente = {
-    "nomeCliente": customer.name,
-    "cpfCliente": customer.document,
-    "emailCliente": customer.email,
-    "telefoneCliente": customer.phone_number
-  }
-
-  nomeProduto = data.products[0].name.upper()
-  quantidadeVendida = data.products[0].offer_name.split(" ")[0]
+    nomeProduto = data.products[0].name.upper()
+    quantidadeVendida = data.products[0].offer_name.split(" ")[0]
     
-  if "PDRN" in nomeProduto:
-    nomeProduto = "PDRN"
-  elif "GHK-CU" in nomeProduto:
-    nomeProduto = "GHK-CU"
+    if "PDRN" in nomeProduto:
+        nomeProduto = "PDRN"
+    elif "GHK-CU" in nomeProduto:
+        nomeProduto = "GHK-CU"
 
-  dadosVenda = {
-    "nomeProduto": nomeProduto,
-    "precoTotal": data.total_price.replace("R$ ", "").replace(".", ""),
-    "codigoPedido": data.sale_id,
-    "dataVenda": data.created_at.split(" ")[0],
-    "quantidadeVendida": quantidadeVendida
-  } 
-  print(dadosVenda["codigoPedido"])
+    dadosVenda = {
+        "nomeProduto": nomeProduto,
+        "precoTotal": data.total_price.replace("R$ ", "").replace(".", ""),
+        "codigoPedido": data.sale_id,
+        "dataVenda": data.created_at.split(" ")[0],
+        "quantidadeVendida": quantidadeVendida
+    } 
+    print(f"Processando Pedido: {dadosVenda['codigoPedido']}")
 
-  chaveBusca = f"{nomeProduto}-{quantidadeVendida}"
-  codigoSKU = skus.get(chaveBusca)
-  
-  tokens = blingAPI.readTokensFile()
-  access_token = tokens["access_token"]
+    chaveBusca = f"{nomeProduto}-{quantidadeVendida}"
+    codigoSKU = skus.get(chaveBusca)
+    
+    tokens = blingAPI.readTokensFile()
+    access_token = tokens["access_token"]
 
-
-  return await blingAPI.createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoCliente, dadosVenda) 
-
+    return await blingAPI.createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoCliente, dadosVenda)
 
 if os.path.exists("tokens.txt"):
-  tokens = blingAPI.readTokensFile()
-  refresh_token = tokens["refresh_token"]
-  blingAPI.refreshAccessToken()
+  print("🔄 Atualizando tokens...")
+  try:
+    blingAPI.refreshAccessToken()
+  except Exception as e:
+    print(f"Erro ao atualizar: {e}")
 else: 
-  blingAPI.generateAccessToken()    
+  print("🔑 Gerando token inicial...")
+  try:
+    blingAPI.generateAccessToken()
+  except Exception as e:
+    print(f"Erro ao gerar: {e}")
 
-uvicorn.run("server:app", host="0.0.0.0", port=3000)
+if __name__ == "__main__":
+  uvicorn.run("server:app", host="0.0.0.0", port=4000, reload=True)
