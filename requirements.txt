@@ -1,0 +1,7 @@
+requests
+base64
+re
+fastapi
+uvicorn
+pydantic
+typing
