@@ -1,10 +1,14 @@
 import requests
 import base64
 import re
+from dotenv import load_dotenv
+import os
 
-client_id = ""
-client_secret = ""
-auth_code = "" 
+load_dotenv()  
+
+client_id = os.getenv("client_id")
+client_secret = os.getenv("client_secret")
+auth_code = os.getenv("auth_code")
 
 url = "https://api.bling.com.br/Api/v3/oauth/token?"
 
@@ -23,9 +27,9 @@ def readTokensFile():
 def writeTokensFile(access_token, refresh_token):
   with open("tokens.txt", "w", encoding="utf-8") as file:
     file.write(f"Access Token: {access_token}\n")
-    file.write(f"Refresh Token: {refresh_token}\n")
-    print(f"----- Access Token ----- \n {access_token} \n\n")
-    print(f"----- Refresh Token ----- \n {refresh_token} \n\n")
+    file.write(f"Refresh Token: {refresh_token}")
+    print(f"----- Access Token ----- \n \n {access_token} \n")
+    print(f"----- Refresh Token ----- \n \n {refresh_token} \n\n")
 
 
 def generateAccessToken():

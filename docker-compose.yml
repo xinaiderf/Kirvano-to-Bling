@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  app-bling:
+    build: .
+    container_name: bling_integration
+    restart: always
+    ports:
+      - "4000:4000"
+    volumes:
+      - .:/app
+    environment:
+      - client_id=${client_id}
+      - client_secret=${client_secret}
+      - auth_code=${auth_code}
+      - PYTHONUNBUFFERED=1
