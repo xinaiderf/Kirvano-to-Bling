@@ -1,6 +1,5 @@
 # Integração Kirvano → Bling (API V3)
----
-## Este projeto automatiza o fluxo de vendas Aprovadas da Kirvano, enviando-as diretamente para o Bling utilizando a API V3 e Webhooks.
+<p> Este projeto automatiza o fluxo de vendas Aprovadas da Kirvano, enviando-as diretamente para o Bling utilizando a API V3 e Webhooks. </p>
 ---
 
 🛠️ Tecnologias Utilizadas
