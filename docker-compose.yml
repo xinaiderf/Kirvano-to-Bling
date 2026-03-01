@@ -13,5 +13,5 @@ services:
       - client_id=${client_id}
       - client_secret=${client_secret}
       - auth_code=${auth_code}
-      - tokenBase64=${tokenBase64}
+      - tokenBearer=${tokenBearer}
       - PYTHONUNBUFFERED=1

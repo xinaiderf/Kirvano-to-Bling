@@ -39,14 +39,14 @@ class KirvanoWebhook(BaseModel):
     products: List[Product]
 
 skus = {
-    "PDRN-1": "SKU1",
-    "PDRN-3": "SKU2",
-    "PDRN-5": "SKU3",
-    "PDRN-12": "SKU4",
-    "GHK-CU-1": "SKU9",
-    "GHK-CU-3": "SKU6",
-    "GHK-CU-5": "SKU7",
-    "GHK-CU-12": "SKU8"
+    "PDRN-1": "PDR3001 U",
+    "PDRN-3": "PDR3003 U",
+    "PDRN-5": "PDR3005 U",
+    "PDRN-12": "PDR30012",
+    "GHK-CU-1": "GHK1 U",
+    "GHK-CU-3": "GHK3 U",
+    "GHK-CU-5": "GHK5 U",
+    "GHK-CU-12": "GHK12"
 }
 
 tokenBearer = os.getenv("tokenBearer")
@@ -56,54 +56,54 @@ tokenBearer = os.getenv("tokenBearer")
 @app.post("/newOrder")
 async def newOrder(data: KirvanoWebhook, Authorization: str = Header(None)):
     
-    if Authorization != f"Bearer {tokenBearer}":
-      raise HTTPException(status_code=401, detail="Unauthorized")
+  if Authorization != f"Bearer {tokenBearer}":
+    raise HTTPException(status_code=401, detail="Unauthorized")
     
     
-    customer = data.customer
-    address = customer.address
+  customer = data.customer
+  address = customer.address
 
-    enderecoCliente = {
-        "logradouro": address.street if address else "",
-        "numero": address.number if address else "",
-        "complemento": address.complement if address else "",
-        "bairro": address.neighborhood if address else "",
-        "municipio": address.city if address else "",
-        "uf": address.state if address else "",
-        "cep": address.zipcode if address else ""
-    }
+  enderecoCliente = {
+      "logradouro": address.street if address else "",
+      "numero": address.number if address else "",
+      "complemento": address.complement if address else "",
+      "bairro": address.neighborhood if address else "",
+      "municipio": address.city if address else "",
+      "uf": address.state if address else "",
+      "cep": address.zipcode if address else ""
+  }
 
-    dadosCliente = {
-        "nomeCliente": customer.name,
-        "cpfCliente": customer.document,
-        "emailCliente": customer.email,
-        "telefoneCliente": customer.phone_number
-    }
+  dadosCliente = {
+    "nomeCliente": customer.name,
+    "cpfCliente": customer.document,
+    "emailCliente": customer.email,
+    "telefoneCliente": customer.phone_number
+  }
 
-    nomeProduto = data.products[0].name.upper()
-    quantidadeVendida = data.products[0].offer_name.split(" ")[0]
+  nomeProduto = data.products[0].name.upper()
+  quantidadeVendida = data.products[0].offer_name.split(" ")[0]
     
-    if "PDRN" in nomeProduto:
-        nomeProduto = "PDRN"
-    elif "GHK-CU" in nomeProduto:
-        nomeProduto = "GHK-CU"
+  if "PDRN" in nomeProduto:
+    nomeProduto = "PDRN"
+  elif "GHK-CU" in nomeProduto:
+    nomeProduto = "GHK-CU"
 
-    dadosVenda = {
-        "nomeProduto": nomeProduto,
-        "precoTotal": data.total_price.replace("R$ ", "").replace(".", ""),
-        "codigoPedido": data.sale_id,
-        "dataVenda": data.created_at.split(" ")[0],
-        "quantidadeVendida": quantidadeVendida
-    } 
-    print(f"Processando Pedido: {dadosVenda['codigoPedido']}")
+  dadosVenda = {
+    "nomeProduto": nomeProduto,
+    "precoTotal": data.total_price.replace("R$ ", "").replace(".", ""),
+    "codigoPedido": data.sale_id,
+    "dataVenda": data.created_at.split(" ")[0],
+    "quantidadeVendida": quantidadeVendida
+  } 
+  print(f"Processando Pedido: {dadosVenda['codigoPedido']}")
 
-    chaveBusca = f"{nomeProduto}-{quantidadeVendida}"
-    codigoSKU = skus.get(chaveBusca)
+  chaveBusca = f"{nomeProduto}-{quantidadeVendida}"
+  codigoSKU = skus.get(chaveBusca)
     
-    tokens = blingAPI.readTokensFile()
-    access_token = tokens["access_token"]
+  tokens = blingAPI.readTokensFile()
+  access_token = tokens["access_token"]
 
-    return await blingAPI.createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoCliente, dadosVenda)
+  return await blingAPI.createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoCliente, dadosVenda)
 
 if os.path.exists("tokens.txt"):
   print("🔄 Atualizando tokens...")
