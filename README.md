@@ -37,7 +37,6 @@ Configuração do Script: Copie o valor de code e cole na variável auth_code no
 
 ⚠️ Atenção: Você tem cerca de 1 minuto para realizar a troca do auth_code pelo token antes que ele expire.
 
---- 
 Instale as dependências: pip install -r requirements.txt
 
 Inicie o Servidor:
@@ -45,7 +44,6 @@ python server.py
 
 Persistência: Na primeira execução, o script criará um arquivo tokens.txt. A partir daí, o sistema usará o Refresh Token automaticamente para renovar o acesso sem intervenção manual.
 
----
 📡 Configuração do Webhook (Kirvano)
 Com o servidor rodando, configure o Webhook na sua conta Kirvano:
 
