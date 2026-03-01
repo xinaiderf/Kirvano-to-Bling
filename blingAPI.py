@@ -91,8 +91,12 @@ async def createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoClien
 
 
   contatoId = await getContato(access_token, dadosCliente["cpfCliente"])
+  print(f"Contato ID: {contatoId}")
   if contatoId is None:
     contatoId = await createContato(access_token, dadosCliente, enderecoCliente)
+    print(f"Contato criado com ID: {contatoId}")
+
+    
   payload = {
     "data": dadosVenda["dataVenda"],
     "numeroPedidoCompra": dadosVenda["codigoPedido"],
@@ -190,7 +194,6 @@ async def createContato(access_token, dadosCliente, enderecoCliente):
 async def getContato(access_token, cpf):
 
   url = f"https://api.bling.com.br/Api/v3/contatos?numeroDocumento={cpf}"
-
   response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"})
   if response.status_code == 200:
     dados = response.json()

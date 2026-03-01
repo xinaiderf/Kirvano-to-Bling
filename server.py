@@ -49,14 +49,14 @@ skus = {
     "GHK-CU-12": "SKU8"
 }
 
-tokenBase64 = os.getenv("tokenBase64")
-TOKEN = base64.b64decode(tokenBase64).decode('utf-8')
+tokenBearer = os.getenv("tokenBearer")
+
 
 
 @app.post("/newOrder")
 async def newOrder(data: KirvanoWebhook, Authorization: str = Header(None)):
     
-    if Authorization != f"Bearer {TOKEN}":
+    if Authorization != f"Bearer {tokenBearer}":
       raise HTTPException(status_code=401, detail="Unauthorized")
     
     
