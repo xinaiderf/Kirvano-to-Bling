@@ -1,15 +1,15 @@
 # Integração Kirvano → Bling (API V3)
+---
 ## Este projeto automatiza o fluxo de vendas Aprovadas da Kirvano, enviando-as diretamente para o Bling utilizando a API V3 e Webhooks.
 ---
 
 🛠️ Tecnologias Utilizadas
 Python 3.13+
+FastAPI / Uvicorn
+Bling API V3
+Kirvano Webhook
 
-FastAPI / Uvicorn (para o Webhook)
-
-Bling API V3 (OAuth 2.0)
-
-Kirvano Webhooks
+<br>
 
 ⚙️ Configuração Inicial no Bling
 Crie um Aplicativo: No painel do Bling, vá em Configurações > Integrações > Aplicativos.
