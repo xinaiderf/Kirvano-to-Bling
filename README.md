@@ -4,10 +4,10 @@
 ---
 
 🛠️ Tecnologias Utilizadas
-Python 3.13+
-FastAPI / Uvicorn
-Bling API V3
-Kirvano Webhook
+* Python 3.13+
+* FastAPI / Uvicorn
+* Bling API V3
+* Kirvano Webhook
 
 <br>
 
@@ -19,7 +19,7 @@ Callback: No campo Link de Redirecionamento, você pode usar https://google.com 
 Permissões: Garanta que o app tenha todas as permissões de leitura e escrita para Vendas e Contatos.
 
 Credenciais: Copie o Client ID e o Client Secret e insira nas variáveis correspondentes no seu código.
-
+---
 🔑 Autenticação e Primeiros Passos
 O Bling utiliza o protocolo OAuth 2.0. Siga este fluxo para o primeiro acesso:
 
@@ -31,20 +31,20 @@ https://google.com/?code=VALOR_DO_CODIGO_AQUI&state=...
 Configuração do Script: Copie o valor de code e cole na variável auth_code no seu script.
 
 ⚠️ Atenção: Você tem cerca de 1 minuto para realizar a troca do auth_code pelo token antes que ele expire.
-
+--- 
 Instale as dependências: pip install -r requirements.txt
 
 Inicie o Servidor:
 python server.py
 
 Persistência: Na primeira execução, o script criará um arquivo tokens.txt. A partir daí, o sistema usará o Refresh Token automaticamente para renovar o acesso sem intervenção manual.
-
+---
 📡 Configuração do Webhook (Kirvano)
-Com o servidor rodando (e exposto via Ngrok ou VPS), configure o Webhook na sua conta Kirvano:
+Com o servidor rodando, configure o Webhook na sua conta Kirvano:
 
 Evento: Venda Aprovada.
 
-URL: https://seu-dominio.com/newOrder (ou o path que você definiu).
+URL: https://seu-dominio.com/newOrder
 
 💸 Finalização
 Após esses passos, cada venda aprovada na Kirvano será processada, o contato será verificado/criado e o pedido de venda será lançado no Bling automaticamente. Agora é só escalar e ver o negócio rodar no automático!
