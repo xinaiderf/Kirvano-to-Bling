@@ -96,14 +96,12 @@ async def newOrder(data: KirvanoWebhook):
 
   return await blingAPI.createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoCliente, dadosVenda) 
 
-if __name__ == "__main__":
-  os.system("cls")
 
-  if os.path.exists("tokens.txt"):
-    tokens = blingAPI.readTokensFile()
-    refresh_token = tokens["refresh_token"]
-    blingAPI.refreshAccessToken()
-  else: 
-    blingAPI.generateAccessToken()    
-  
-  uvicorn.run("server:app", host="0.0.0.0", port=3000, reload=True)
+if os.path.exists("tokens.txt"):
+  tokens = blingAPI.readTokensFile()
+  refresh_token = tokens["refresh_token"]
+  blingAPI.refreshAccessToken()
+else: 
+  blingAPI.generateAccessToken()    
+
+uvicorn.run("server:app", host="0.0.0.0", port=3000)
