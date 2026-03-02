@@ -205,7 +205,6 @@ async def createContato(access_token, dadosCliente, enderecoCliente):
   
   if response.status_code == 201:
     print("--- CONTATO CRIADO COM SUCESSO! ---")
-    
     return response.json()["data"]["id"]
   else:
     print(f"Erro {response.status_code}: {response.text}")
