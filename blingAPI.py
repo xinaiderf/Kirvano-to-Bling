@@ -95,8 +95,8 @@ async def createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoClien
   if contatoId is None:
     contatoId = await createContato(access_token, dadosCliente, enderecoCliente)
     print(f"Contato criado com ID: {contatoId}")
-
-    
+        
+  
   payload = {
     "data": dadosVenda["dataVenda"],
     "numeroPedidoCompra": dadosVenda["codigoPedido"],
@@ -106,13 +106,22 @@ async def createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoClien
     "observacoesInternas": f"Integração Kirvano. Venda: {dadosVenda['codigoPedido']}",
     "itens": [
       {
-        "codigo": codigoSKU, 
-        "descricao": f"Produto referente à venda {dadosVenda['codigoPedido']}, feita na plataforma Kirvano.",
+        "codigo": codigoSKU["sku"], 
         "quantidade": dadosVenda["quantidadeVendida"],
-        "valor": dadosVenda["precoTotal"],
-        "unidade": "UN"
-      }
+        "valor": float(dadosVenda["precoTotal"].replace(",", ".")) / int(dadosVenda["quantidadeVendida"]),
+        "unidade": "UN",
+        "produto": {
+          "id": codigoSKU["id"]
+        },
+      },
     ],
+    "parcelas": [{
+      "dataVencimento": dadosVenda["dataVenda"],
+      "valor": float(dadosVenda["precoTotal"].replace(",", ".")),
+      "formaPagamento": {
+        "id": 7195496
+        }}
+      ],
     "transporte": {
       "fretePorConta": 0, 
       "etiqueta": {

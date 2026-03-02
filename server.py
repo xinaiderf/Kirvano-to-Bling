@@ -39,18 +39,16 @@ class KirvanoWebhook(BaseModel):
     products: List[Product]
 
 skus = {
-    "PDRN-1": "PDR3001 U",
-    "PDRN-3": "PDR3003 U",
-    "PDRN-5": "PDR3005 U",
-    "PDRN-12": "PDR30012",
-    "GHK-CU-1": "GHK1 U",
-    "GHK-CU-3": "GHK3 U",
-    "GHK-CU-5": "GHK5 U",
-    "GHK-CU-12": "GHK12"
+    "PDRN-1":    {"sku": "PDR3001 U",  "id": 16607549675},
+    "PDRN-3":    {"sku": "PDR3003 U",  "id": 16607550599},
+    "PDRN-5":    {"sku": "PDR3005 U",  "id": 16607550600},
+    "PDRN-12":   {"sku": "PDR30012",   "id": 16607550601},
+    "GHK-CU-1":  {"sku": "GHK1 U",     "id": 16609952773},
+    "GHK-CU-3":  {"sku": "GHK3 U",     "id": 16609952777},
+    "GHK-CU-5":  {"sku": "GHK5 U",     "id": 16609952780},
+    "GHK-CU-12": {"sku": "GHK12",      "id": 16609952786}
 }
-
 tokenBearer = os.getenv("tokenBearer")
-
 
 
 @app.post("/newOrder")
@@ -88,17 +86,18 @@ async def newOrder(data: KirvanoWebhook, Authorization: str = Header(None)):
   elif "GHK-CU" in nomeProduto:
     nomeProduto = "GHK-CU"
 
+  chaveBusca = f"{nomeProduto}-{quantidadeVendida}"
+  codigoSKU = skus.get(chaveBusca)
+
   dadosVenda = {
     "nomeProduto": nomeProduto,
     "precoTotal": data.total_price.replace("R$ ", "").replace(".", ""),
     "codigoPedido": data.sale_id,
     "dataVenda": data.created_at.split(" ")[0],
-    "quantidadeVendida": quantidadeVendida
+    "quantidadeVendida": quantidadeVendida,
   } 
   print(f"Processando Pedido: {dadosVenda['codigoPedido']}")
 
-  chaveBusca = f"{nomeProduto}-{quantidadeVendida}"
-  codigoSKU = skus.get(chaveBusca)
     
   tokens = blingAPI.readTokensFile()
   access_token = tokens["access_token"]
