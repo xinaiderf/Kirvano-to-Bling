@@ -1,10 +1,10 @@
-from fastapi import FastAPI, HTTPException, Header
+from fastapi import FastAPI, Security, HTTPException
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import uvicorn
 import blingAPI
 from pydantic import BaseModel
 from typing import List, Optional
 import os
-import base64
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -50,11 +50,12 @@ skus = {
 }
 tokenBearer = os.getenv("tokenBearer")
 
+security = HTTPBearer()
 
 @app.post("/newOrder")
-async def newOrder(data: KirvanoWebhook, Authorization: str = Header(None)):
+async def newOrder(data: KirvanoWebhook, credentials: HTTPAuthorizationCredentials = Security(security)):
     
-  if Authorization != f"Bearer {tokenBearer}":
+  if credentials.credentials != tokenBearer:
     raise HTTPException(status_code=401, detail="Unauthorized")
     
     
