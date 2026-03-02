@@ -145,8 +145,18 @@ async def createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoClien
   
 
   response = requests.post(url, headers={"Authorization": f"Bearer {access_token}"}, json=payload)
+  if response.status_code == 401:
+    print("🔄 Token expirado! Tentando renovar...")
+    refreshAccessToken()
+
+    tokens = readTokensFile()
+    access_token = tokens["access_token"]
+
+    response = requests.post(url, headers={"Authorization": f"Bearer {access_token}"}, json=payload)
+  
   if response.status_code == 201:
     print("--- PEDIDO DE VENDA CRIADO COM SUCESSO! ---")
+  
   else:
     print(f"Erro {response.status_code}: {response.text}")
 
@@ -195,7 +205,8 @@ async def createContato(access_token, dadosCliente, enderecoCliente):
   
   if response.status_code == 201:
     print("--- CONTATO CRIADO COM SUCESSO! ---")
-    return
+    
+    return response.json()["data"]["id"]
   else:
     print(f"Erro {response.status_code}: {response.text}")
 
