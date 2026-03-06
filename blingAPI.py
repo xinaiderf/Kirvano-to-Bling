@@ -108,7 +108,7 @@ async def createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoClien
       {
         "codigo": codigoSKU["sku"], 
         "quantidade": dadosVenda["quantidadeVendida"],
-        "valor": float(dadosVenda["precoTotal"].replace(",", ".")) / int(dadosVenda["quantidadeVendida"]),
+        "valor": float(dadosVenda["precoTotal"]) / int(dadosVenda["quantidadeVendida"]),
         "unidade": "UN",
         "produto": {
           "id": codigoSKU["id"]
@@ -117,7 +117,7 @@ async def createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoClien
     ],
     "parcelas": [{
       "dataVencimento": dadosVenda["dataVenda"],
-      "valor": float(dadosVenda["precoTotal"].replace(",", ".")),
+      "valor": float(dadosVenda["precoTotal"]),
       "formaPagamento": {
         "id": 7195496
         }}
