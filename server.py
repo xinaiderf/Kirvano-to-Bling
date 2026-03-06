@@ -92,7 +92,7 @@ async def newOrder(data: KirvanoWebhook, credentials: HTTPAuthorizationCredentia
 
   dadosVenda = {
     "nomeProduto": nomeProduto,
-    "precoTotal": data.total_price.replace("R$ ", "").replace(".", ""),
+    "precoTotal": data.total_price.replace("R$", "").replace("\xa0", "").replace(" ", "").replace(",", ".").strip(),
     "codigoPedido": data.sale_id,
     "dataVenda": data.created_at.split(" ")[0],
     "quantidadeVendida": quantidadeVendida,
