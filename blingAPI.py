@@ -119,7 +119,7 @@ async def createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoClien
       "dataVencimento": dadosVenda["dataVenda"],
       "valor": float(dadosVenda["precoTotal"]),
       "formaPagamento": {
-        "id": 7195496
+        "id": 7242576
         }}
       ],
     "transporte": {
