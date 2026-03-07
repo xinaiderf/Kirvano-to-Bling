@@ -39,14 +39,10 @@ class KirvanoWebhook(BaseModel):
     products: List[Product]
 
 skus = {
-    "PDRN-1":    {"sku": "PDR3001 U",  "id": 16607549675},
-    "PDRN-3":    {"sku": "PDR3003 U",  "id": 16607550599},
-    "PDRN-5":    {"sku": "PDR3005 U",  "id": 16607550600},
-    "PDRN-12":   {"sku": "PDR30012",   "id": 16607550601},
-    "GHK-CU-1":  {"sku": "GHK1 U",     "id": 16609952773},
-    "GHK-CU-3":  {"sku": "GHK3 U",     "id": 16609952777},
-    "GHK-CU-5":  {"sku": "GHK5 U",     "id": 16609952780},
-    "GHK-CU-12": {"sku": "GHK12",      "id": 16609952786}
+    "PDRN-1":    {"sku": "PDR3001 U",  "id": 16612172641},
+    "PDRN-3":    {"sku": "PDR3003 U",  "id": 16612172647},
+    "PDRN-5":    {"sku": "PDR3005 U",  "id": 16612172647},
+    "PDRN-12":   {"sku": "PDR30012",   "id": 16612172647},
 }
 tokenBearer = os.getenv("tokenBearer")
 
