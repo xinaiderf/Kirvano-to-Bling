@@ -38,6 +38,9 @@ class KirvanoWebhook(BaseModel):
     customer: Customer
     products: List[Product]
 
+class pedidoVenda(BaseModel):
+  pedidoVendaId: int
+
 skus = {
     "PDRN-1":    {"sku": "PDR3001 U",  "id": 16612172641},
     "PDRN-3":    {"sku": "PDR3003 U",  "id": 16612172647},
@@ -102,6 +105,27 @@ async def newOrder(data: KirvanoWebhook, credentials: HTTPAuthorizationCredentia
   access_token = tokens["access_token"]
 
   return await blingAPI.createPedidoVenda(access_token, codigoSKU, dadosCliente, enderecoCliente, dadosVenda)
+
+    
+@app.post("/envia-rastreio")
+async def enviaRastreioWhatsapp(data: pedidoVenda):
+
+  tokens = blingAPI.readTokensFile()
+  access_token = tokens["access_token"]
+  
+  dadosEtiqueta = await blingAPI.getEtiquetaEnvio(access_token, data.pedidoVendaId)
+  dadosEtiqueta = dadosEtiqueta["data"]
+  
+  codigoRastreio = dadosEtiqueta["transporte"]["volumes"][0]["codigoRastreamento"]
+  return dadosEtiqueta["contato"]["numeroDocumento"]
+  
+  
+  numeroWhatsapp = await blingAPI.getContato(access_token, cpf)
+  
+  return numeroWhatsapp
+  
+  return dadosEtiqueta
+
 
 if os.path.exists("tokens.txt"):
   print("🔄 Atualizando tokens...")

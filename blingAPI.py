@@ -223,3 +223,12 @@ async def getContato(access_token, cpf):
   else:
     print("----- CLIENTE ID NÃO ENCONTRADO -----")
     return None
+  
+  
+async def getEtiquetaEnvio(access_token, pedidoVendaId):
+  url = f"https://api.bling.com.br/Api/v3/pedidos/vendas/{pedidoVendaId}"
+  
+  response = requests.get(url, headers={"Authorization": f"Bearer {access_token}"})
+  if response.status_code == 200:
+    dados = response.json()
+    return dados
