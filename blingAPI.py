@@ -223,6 +223,7 @@ async def getContato(access_token, cpf):
   else:
     print("----- CLIENTE ID NÃO ENCONTRADO -----")
     return None
+<<<<<<< HEAD
   
   
 async def getEtiquetaEnvio(access_token, pedidoVendaId):
@@ -232,3 +233,7 @@ async def getEtiquetaEnvio(access_token, pedidoVendaId):
   if response.status_code == 200:
     dados = response.json()
     return dados
+=======
+
+
+>>>>>>> fd425cb (barro)
